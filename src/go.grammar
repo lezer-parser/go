@@ -1,0 +1,262 @@
+// FIXME semicolon behavior
+
+@precedence {
+  channelIn
+  channelOut
+
+  pointer
+
+  unary
+  mult @left
+  add @left
+  compare @left
+  and @left
+  or @left
+
+  convert
+  dot
+  index
+  slice
+  type
+  call
+
+  else @right
+}
+
+@top File {
+  (PackageClause ";")?
+  (ImportDecl ";")*
+  ((declaration | FunctionDecl | MethodDecl) ";")*
+}
+
+@skip { space | LineComment | BlockComment }
+
+PackageName { identifier ~identifier }
+
+TypeName { (PackageName ".")* identifier ~identifier }
+
+VariableName { identifier ~identifier }
+
+LabelName { identifier }
+
+FieldName { identifier ~identifier }
+
+ParameterizedType { TypeName TypeArgs }
+
+TypeArgs { "[" commaSep<type> "]" }
+
+TypeParams { "[" TypeParam "]" }
+
+TypeParam { TypeName ("," TypeName)* typeElem }
+
+type[@isGroup=Type] {
+  PointerType { "*" !pointer type } |
+  FunctionType { kw<"func"> signature } |
+  InterfaceType { kw<"interface"> InterfaceBody { "{" ((MethodElem | typeElem) ";")* "}" } } |
+  ChannelType {
+    kw<"chan"> type |
+    kw<"chan"> "<-" type !channelIn |
+    "<-" kw<"chan"> type !channelOut
+  } |
+  literalType
+}
+
+literalType {
+  StructType { kw<"struct"> StructBody { "{" (FieldDecl ";")* "}" } } |
+  ArrayType { "[" expr "]" type } |
+  SliceType { "[" "..."? "]" type } |
+  MapType { kw<"map"> "[" type "]" type } |
+  TypeName |
+  ParameterizedType
+}
+
+FieldDecl {
+  (FieldName ("," FieldName)* type | "*"? (TypeName | ParameterizedType)) String?
+}
+
+signature { Parameters (Parameters | type)? }
+
+Parameters { "(" commaSep<Parameter> ")" }
+
+Parameter { idList? "..."? type }
+
+MethodElem { FieldName signature }
+typeOrUnderlying { type | UnderlyingType { "~" type } }
+typeElem {
+  typeOrUnderlying |
+  TypeElem { typeOrUnderlying ("|" typeOrUnderlying)+ }
+}
+
+Block { "{" (statement ";")* "}" }
+
+ConstSpec { idList (type? "=" exprList)? }
+ConstDecl { kw<"const"> (ConstSpec | "(" (ConstSpec ";")* ")") }
+
+TypeSpec { TypeName "=" type | TypeName TypeParams? type }
+TypeDecl { kw<"type"> (TypeSpec | ("(" TypeSpec ";")* ")") }
+
+VarSpec { idList (type ("=" exprList) | "=" exprList) }
+VarDecl { kw<"var"> (VarSpec | "(" (VarSpec ";")* ")") }
+shortVarDecl[@name=VarDecl] { idList ":=" exprList }
+
+FunctionDecl { kw<"func"> VariableName TypeParams? signature Block? }
+
+MethodDecl { kw<"func"> Parameters FieldName signature Block? }
+
+ImportSpec { ("." | PackageName) String }
+ImportDecl { kw<"import"> (ImportSpec | "(" (ImportSpec ";")* ")") }
+
+declaration {
+  ConstDecl | TypeDecl | VarDecl | shortVarDecl
+}
+
+expr[@isGroup=Expr] {
+  operand |
+  Conversion { type !convert "(" expr ","? ")" } |
+  MethodExpr { type !dot "." FieldName } |
+  SelectorExpr { expr !dot "." FieldName } |
+  IndexExpr { expr !index "[" expr ","? "]" } |
+  SliceExpr { expr !slice "[" expr? ":" expr? (":" expr)? "]" } |
+  TypeAssertion { expr !type "." "(" type ")" } |
+  CallExpr { expr !call Arguments } |
+  UnaryExp { ("+" | "-" | "!" | "^" | "*" | "&" | "<-") !unary expr } |
+  BinaryExp {
+    expr !mult ("*" | "/" | "%" | "<<" | ">>" | "&" | "&^") expr |
+    expr !add ("+" | "-" | "|" | "^") expr |
+    expr !compare ("==" | "!=" | "<" | "<=" | ">" | ">=") expr |
+    expr !and "&&" expr |
+    expr !or "||" expr
+  }
+}
+
+Arguments {
+  "(" (( exprList | type ("," exprList)?) "..."? ","?)? ")"
+}
+
+operand {
+  Number |
+  String |
+  Rune |
+  VariableName { (PackageName ".")* identifier ~identifier } |
+  Parameterized { VariableName TypeArgs } |
+  TypedLiteral { literalType LiteralValue } |
+  ParenthesizedExpr { "(" expr ")" } |
+  FunctionLiteral { kw<"func"> signature Block }
+}
+
+LiteralValue { "{" commaSep<Element { (Key { expr | LiteralValue } ":")? (expr | LiteralValue) }> "}" }
+
+exprList { expr ("," expr)* }
+idList { VariableName ("," VariableName)* }
+
+statement[@isGroup=Statement] {
+  simpleStatement |
+  declaration |
+  Block |
+  LabeledStatement { LabelName ":" statement } |
+  IfStatement |
+  SwitchStatement {
+    kw<"switch"> (simpleStatement ";")? expr SwitchBlock
+  } |
+  TypeSwitchStatement {
+    kw<"switch"> (simpleStatement ";")? (VariableName ":=")? expr "." "(" kw<"type"> ")" typeSwitchBlock
+  } |
+  ForStatement {
+    kw<"for"> (expr | ForClause | RangeClause) Block
+  } |
+  GoStatement {
+    kw<"go"> expr
+  } |
+  SelectStatement {
+    kw<"select"> SelectBlock { "{" (Case<SendStatement | ReceiveStatement> statement*)* "}" }
+  } |
+  ReturnStatement {
+    kw<"return"> exprList?
+  } |
+  GotoStatement {
+    (kw<"break"> | kw<"continue"> | kw<"goto">) LabelName?
+  } |
+  FallthroughStatement {
+    kw<"fallthrough">
+  } |
+  DeferStatement {
+    kw<"defer"> expr
+  }  
+}
+
+IfStatement { kw<"if"> (simpleStatement ";")? expr Block (!else kw<"else"> (IfStatement | Block)) }
+
+Case<expr> { (kw<"case"> expr | kw<"default">) ":" }
+
+SwitchBlock {
+  "{" (Case<exprList> statement*)* "}"
+}
+
+ForClause { simpleStatement ";" expr ";" simpleStatement }
+
+RangeClause { (exprList "=" | idList ":=") kw<"range"> expr }
+
+typeSwitchBlock[@name=SwitchBlock] {
+  "{" (Case<commaSep<type>> (statement ";")*)* "}"
+}
+
+ReceiveStatement { (exprList "=" | idList ":=") expr }
+
+PackageClause { kw<"package"> PackageName }
+
+simpleStatement {
+  EmptyStatement { } |
+  ExprStatement { expr } |
+  SendStatement |
+  IncDecStatement { expr ("++" | "--") } |
+  Assignment { exprList ("=" | UpdateOp) exprList } |
+  shortVarDecl
+}
+
+SendStatement { expr "<-" expr }
+
+kw<term> { @specialize[@name={term}]<identifier, term> }
+
+commaSep<expr> { (expr ("," expr)*)? ","? }
+
+@local tokens {
+  blockCommentEnd { "*/" }
+  blockCommentNewline { "\n" }
+  @else blockCommentContent
+}
+
+@skip {} {
+  BlockComment[isolate] { "/*" (blockCommentContent | blockCommentNewline)* blockCommentEnd }
+}
+
+@tokens {
+  space { $[ \t\n\r]+ }
+  LineComment { "//" ![\n]* }
+
+  digit { $[0-9] }
+  digits { digit+ ("_" digit+)* }
+  hexDigit { digit | $[a-fA-F] }
+
+  decimalNumber { ("." digits | digits ("." digits?)) ($[eE] $[+-]? digits)? }
+  hexNumber { "0" $[xX] hexDigit+ ("_" hexDigit+)* ($[pP] $[+-]? digits)? }
+  octNumber { "0" $[oO] $[0-7]+ ("_" $[0-7]+)* }
+  binNumber { "0" $[bB] $[01]+ ("_" $[01]+)* }
+  Number { (decimalNumber | hexNumber | octNumber | binNumber) "i"? }
+
+  Rune[isolate] { "'" ("\\" _ | ![\\'\n])* "'" }
+
+  String[isolate] { '"' ("\\" _ | ![\\"\n])* '"' | '`' ![`]* '`' }
+
+  letter { $[_a-zA-Z\u{a1}-\u{10ffff}] }
+
+  identifier { letter (letter | digit)* }
+
+  UpdateOp { ($[-+|^*/%&] | "<<" | ">>" | "&^") "=" }
+
+  "="
+  "(" ")" "{" "}" "[" "]"
+}
+
+@external propSource goHighlighting from "./highlight"
+
+@detectDelim
