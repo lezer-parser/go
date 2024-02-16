@@ -222,7 +222,7 @@ SourceFile(FunctionDecl(func,VariableName,Parameters,Block(
     Case(default),
     ExprStatement(CallExpr(VariableName,Arguments)),
     GotoStatement(break))),
-  SwitchStatement(switch,SwitchBlock(Case(case,VariableName),ReturnStatement(return))),
+  SwitchStatement(switch,SwitchBlock(Case(case,Bool),ReturnStatement(return))),
   SwitchStatement(switch,VarDecl(VariableName,CallExpr(VariableName,Arguments)),VariableName,SwitchBlock))))
 
 # Type switch statements
