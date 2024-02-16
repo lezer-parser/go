@@ -122,7 +122,7 @@ expr[@isGroup=Expr] {
   Number |
   String |
   Bool { @specialize<identifier, "true" | "false"> } |
-  Nil { @extend<identifier, "nil"> } |
+  Nil[@dynamicPrecedence=1] { @extend<identifier, "nil"> } |
   Rune |
   VariableName |
   TypedLiteral { literalType LiteralValue } |
