@@ -35,6 +35,8 @@ typeName { QualifiedType { (VariableName ~dot ".")+ TypeName } | TypeName }
 
 VariableName { identifier ~identifier }
 
+DefName { identifier ~identifier }
+
 LabelName { identifier }
 
 FieldName { identifier ~identifier }
@@ -83,7 +85,7 @@ MethodElem { FieldName signature }
 typeOrUnderlying { type | UnderlyingType { "~" type } }
 typeElem {
   typeOrUnderlying |
-  TypeElem { typeOrUnderlying ("|" typeOrUnderlying)+ }
+  TypeElem { typeOrUnderlying (LogicOp<"|"> typeOrUnderlying)+ }
 }
 
 Block { "{" semiSep<statement> "}" }
@@ -94,18 +96,18 @@ ConstDecl { kw<"const"> (ConstSpec | "(" (ConstSpec semi)* ")") }
 TypeSpec { typeName "=" type | typeName TypeParams? type }
 TypeDecl { kw<"type"> (TypeSpec | "(" (TypeSpec semi)* ")") }
 
-VarSpec { idList (type ("=" exprList)? | "=" exprList) }
+VarSpec { idList (type ("=" exprList)? | "=" exprList)? }
 VarDecl { kw<"var"> (VarSpec | "(" (VarSpec semi)* ")") }
 shortVarDecl[@name=VarDecl] { idList ~shortvar ":=" exprList }
 
-FunctionDecl { kw<"func"> VariableName TypeParams? signature Block? }
+FunctionDecl { kw<"func"> DefName TypeParams? signature Block? }
 
 MethodDecl { kw<"func"> Parameters FieldName signature Block? }
 
-ImportSpec { ("." | VariableName)? String }
+ImportSpec { ("." | DefName)? String }
 ImportDecl { kw<"import"> (ImportSpec | "(" (ImportSpec semi)* ")") }
 
-// Kludges (borrowed from tree-sitter):
+// Kludges around expr/type ambiguity (borrowed from tree-sitter):
 //
 // - Only allow type args in call expressions, though the grammar
 //   allows them on any identifier expression. This avoids every
@@ -156,7 +158,7 @@ newArguments[@name=Arguments] {
 LiteralValue { "{" commaSep<Element { (Key { expr | LiteralValue } ":")? (expr | LiteralValue) }> "}" }
 
 exprList { expr ~ids ("," expr? ~ids)* }
-idList { VariableName ~ids ("," VariableName ~ids)* }
+idList { DefName ~ids ("," DefName ~ids)* }
 
 statement[@isGroup=Statement] {
   simpleStatement |
@@ -170,7 +172,7 @@ statement[@isGroup=Statement] {
     kw<"switch"> (simpleStatement semi)? expr? SwitchBlock
   } |
   TypeSwitchStatement {
-    kw<"switch"> (simpleStatement semi)? (VariableName ~shortvar ":=")? expr "." "(" kw<"type"> ")" typeSwitchBlock
+    kw<"switch"> (simpleStatement semi)? (DefName ~shortvar ":=")? expr "." "(" kw<"type"> ")" typeSwitchBlock
   } |
   ForStatement {
     kw<"for"> (expr | ForClause | RangeClause)? Block
@@ -214,7 +216,7 @@ typeSwitchBlock[@name=SwitchBlock] {
 
 ReceiveStatement { (exprList "=" | idList ":=")? expr }
 
-PackageClause { kw<"package"> VariableName }
+PackageClause { kw<"package"> DefName }
 
 simpleStatement {
   ExprStatement { expr } |
@@ -287,7 +289,7 @@ star[@name="*"] { "*" }
   CompareOp { "==" | "!=" | "<" | "<=" | ">" | ">=" }
   IncDecOp { "++" | "--" }
 
-  "<-" "=" ":=" ";" "..." "."
+  "<-" "=" ":=" ";" ":" "..." "." "," "~"
   "(" ")"[@export=closeParen]
   "{" "}"[@export=closeBrace]
   "[" "]"[@export=closeBracket]

@@ -99,10 +99,10 @@ SourceFile(
   TypeDecl(type,TypeSpec(TypeName,InterfaceType(interface,InterfaceBody(
     TypeName,
     QualifiedType(VariableName,TypeName),
-    MethodElem(FieldName,Parameters(Parameter(VariableName,TypeName)),TypeName),
+    MethodElem(FieldName,Parameters(Parameter(DefName,TypeName)),TypeName),
     MethodElem(FieldName,Parameters(Parameter(TypeName),Parameter("...",TypeName)),TypeName))))),
   TypeDecl(type,TypeSpec(TypeName,InterfaceType(interface,InterfaceBody(
-    TypeElem(TypeName,TypeName,UnderlyingType(TypeName),UnderlyingType(TypeName)))))))
+    TypeElem(TypeName,LogicOp,TypeName,LogicOp,UnderlyingType(TypeName),LogicOp,UnderlyingType(TypeName)))))))
 
 # Interface embedded struct types
 
@@ -121,6 +121,7 @@ SourceFile(TypeDecl(type,TypeSpec(TypeName,InterfaceType(interface,InterfaceBody
   PointerType(StructType(struct,StructBody(FieldDecl(FieldName,TypeName)))),
   TypeElem(
     StructType(struct,StructBody(FieldDecl(FieldName,TypeName))),
+    LogicOp,
     UnderlyingType(StructType(struct,StructBody(FieldDecl(FieldName,TypeName))))))))))
 
 # Map types

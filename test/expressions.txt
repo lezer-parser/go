@@ -16,7 +16,7 @@ func main() {
 
 ==>
 
-SourceFile(FunctionDecl(func,VariableName,Parameters,Block(
+SourceFile(FunctionDecl(func,DefName,Parameters,Block(
   ExprStatement(CallExpr(VariableName,Arguments(VariableName,VariableName,"..."))),
   ExprStatement(CallExpr(VariableName,Arguments(VariableName,VariableName))),
   ExprStatement(CallExpr(VariableName,Arguments(VariableName,VariableName,"..."))))))
@@ -145,6 +145,6 @@ func main() {
 
 ==>
 
-SourceFile(FunctionDecl(func,VariableName,Parameters,Block(
+SourceFile(FunctionDecl(func,DefName,Parameters,Block(
   Assignment(VariableName,UnaryExp(LogicOp,UnaryExp("<-",VariableName))),
   Assignment(VariableName,CallExpr(UnaryExp(DerefOp,VariableName),Arguments)))))

@@ -17,17 +17,17 @@ const (
 ==>
 
 SourceFile(ConstDecl(const,
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number)))
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number)))
 
 # Float literals
 
@@ -53,22 +53,22 @@ const (
 ==>
 
 SourceFile(ConstDecl(const,
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number)))
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number)))
 
 # Rune literals
 
@@ -84,12 +84,12 @@ const (
 ==>
 
 SourceFile(ConstDecl(const,
-  ConstSpec(VariableName,Rune),
-  ConstSpec(VariableName,Rune),
-  ConstSpec(VariableName,Rune),
-  ConstSpec(VariableName,Rune),
-  ConstSpec(VariableName,Rune),
-  ConstSpec(VariableName,Rune)))
+  ConstSpec(DefName,Rune),
+  ConstSpec(DefName,Rune),
+  ConstSpec(DefName,Rune),
+  ConstSpec(DefName,Rune),
+  ConstSpec(DefName,Rune),
+  ConstSpec(DefName,Rune)))
 
 # Imaginary literals
 
@@ -111,18 +111,18 @@ const (
 ==>
 
 SourceFile(ConstDecl(const,
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number),
-  ConstSpec(VariableName,Number)))
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number),
+  ConstSpec(DefName,Number)))
 
 # String literals
 
@@ -137,10 +137,10 @@ const (
 ==>
 
 SourceFile(ConstDecl(const,
-  ConstSpec(VariableName,String),
-  ConstSpec(VariableName,String),
-  ConstSpec(VariableName,String),
-  ConstSpec(VariableName,String),
+  ConstSpec(DefName,String),
+  ConstSpec(DefName,String),
+  ConstSpec(DefName,String),
+  ConstSpec(DefName,String),
   ⚠(String)))
 
 # Slice literals
@@ -157,9 +157,9 @@ const s3 = []string{
 ==>
 
 SourceFile(
-  ConstDecl(const,ConstSpec(VariableName,TypedLiteral(SliceType(TypeName),LiteralValue))),
-  ConstDecl(const,ConstSpec(VariableName,TypedLiteral(SliceType(TypeName),LiteralValue(Element(String))))),
-  ConstDecl(const,ConstSpec(VariableName,TypedLiteral(SliceType(TypeName),LiteralValue(Element(String),Element(String))))))
+  ConstDecl(const,ConstSpec(DefName,TypedLiteral(SliceType(TypeName),LiteralValue))),
+  ConstDecl(const,ConstSpec(DefName,TypedLiteral(SliceType(TypeName),LiteralValue(Element(String))))),
+  ConstDecl(const,ConstSpec(DefName,TypedLiteral(SliceType(TypeName),LiteralValue(Element(String),Element(String))))))
 
 # Array literals with implicit length
 
@@ -167,7 +167,7 @@ const a1 = [...]int{1, 2, 3}
 
 ==>
 
-SourceFile(ConstDecl(const,ConstSpec(VariableName,TypedLiteral(
+SourceFile(ConstDecl(const,ConstSpec(DefName,TypedLiteral(
   SliceType(TypeName),LiteralValue(Element(Number),Element(Number),Element(Number))))))
 
 # Map literals
@@ -179,7 +179,7 @@ const s = map[string]string{
 
 ==>
 
-SourceFile(ConstDecl(const,ConstSpec(VariableName,TypedLiteral(
+SourceFile(ConstDecl(const,ConstSpec(DefName,TypedLiteral(
   MapType(map,TypeName,TypeName),
   LiteralValue(Element(Key(String),String),Element(Key(String),String))))))
 
@@ -199,14 +199,14 @@ const g1 = Foo[float64, Bar[int]] { }
 ==>
 
 SourceFile(
-  ConstDecl(const,ConstSpec(VariableName,TypedLiteral(
+  ConstDecl(const,ConstSpec(DefName,TypedLiteral(
     TypeName,
     LiteralValue(Element(Key(VariableName),String),Element(Key(VariableName),String))))),
-  ConstDecl(const,ConstSpec(VariableName,TypedLiteral(
+  ConstDecl(const,ConstSpec(DefName,TypedLiteral(
     StructType(struct,StructBody(FieldDecl(FieldName,TypeName))),
     LiteralValue(Element(Key(VariableName),Number))))),
-  ConstDecl(const,ConstSpec(VariableName,TypedLiteral(QualifiedType(VariableName,TypeName),LiteralValue))),
-  ConstDecl(const,ConstSpec(VariableName,TypedLiteral(
+  ConstDecl(const,ConstSpec(DefName,TypedLiteral(QualifiedType(VariableName,TypeName),LiteralValue))),
+  ConstDecl(const,ConstSpec(DefName,TypedLiteral(
     ParameterizedType(TypeName,TypeArgs(TypeName,ParameterizedType(TypeName,TypeArgs(TypeName)))),
     LiteralValue))))
 
@@ -218,6 +218,6 @@ const s1 = func(s string) (int, int) {
 
 ==>
 
-SourceFile(ConstDecl(const,ConstSpec(VariableName,FunctionLiteral(
-  func,Parameters(Parameter(VariableName,TypeName)),Parameters(Parameter(TypeName),Parameter(TypeName)),
+SourceFile(ConstDecl(const,ConstSpec(DefName,FunctionLiteral(
+  func,Parameters(Parameter(DefName,TypeName)),Parameters(Parameter(TypeName),Parameter(TypeName)),
   Block(ReturnStatement(return,Number,Number))))))

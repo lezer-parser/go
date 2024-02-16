@@ -7,9 +7,9 @@ const three, four, five = 3, 4, 5
 ==>
 
 SourceFile(
-  ConstDecl(const,ConstSpec(VariableName,Number)),
-  ConstDecl(const,ConstSpec(VariableName,VariableName,Number,Number)),
-  ConstDecl(const,ConstSpec(VariableName,VariableName,VariableName,Number,Number,Number)))
+  ConstDecl(const,ConstSpec(DefName,Number)),
+  ConstDecl(const,ConstSpec(DefName,DefName,Number,Number)),
+  ConstDecl(const,ConstSpec(DefName,DefName,DefName,Number,Number,Number)))
 
 # Single const declarations with types
 
@@ -19,8 +19,8 @@ const one, two uint64 = 1, 2
 ==>
 
 SourceFile(
-  ConstDecl(const,ConstSpec(VariableName,TypeName,Number)),
-  ConstDecl(const,ConstSpec(VariableName,VariableName,TypeName,Number,Number)))
+  ConstDecl(const,ConstSpec(DefName,TypeName,Number)),
+  ConstDecl(const,ConstSpec(DefName,DefName,TypeName,Number,Number)))
 
 # Grouped const declarations
 
@@ -31,7 +31,7 @@ const (
 
 ==>
 
-SourceFile(ConstDecl(const,ConstSpec(VariableName,Number),ConstSpec(VariableName,Number)))
+SourceFile(ConstDecl(const,ConstSpec(DefName,Number),ConstSpec(DefName,Number)))
 
 # Const declarations with implicit values
 
@@ -43,7 +43,7 @@ const (
 
 ==>
 
-SourceFile(ConstDecl(const,ConstSpec(VariableName,VariableName),ConstSpec(VariableName),ConstSpec(VariableName)))
+SourceFile(ConstDecl(const,ConstSpec(DefName,VariableName),ConstSpec(DefName),ConstSpec(DefName)))
 
 # Var declarations without types
 
@@ -54,9 +54,9 @@ var three, four, five = 3, 4, 5
 ==>
 
 SourceFile(
-  VarDecl(var,VarSpec(VariableName,Number)),
-  VarDecl(var,VarSpec(VariableName,VariableName,Number,Number)),
-  VarDecl(var,VarSpec(VariableName,VariableName,VariableName,Number,Number,Number)))
+  VarDecl(var,VarSpec(DefName,Number)),
+  VarDecl(var,VarSpec(DefName,DefName,Number,Number)),
+  VarDecl(var,VarSpec(DefName,DefName,DefName,Number,Number,Number)))
 
 # Var declarations with types
 
@@ -66,8 +66,8 @@ var one, two uint64 = 1, 2
 ==>
 
 SourceFile(
-  VarDecl(var,VarSpec(VariableName,TypeName,Number)),
-  VarDecl(var,VarSpec(VariableName,VariableName,TypeName,Number,Number)))
+  VarDecl(var,VarSpec(DefName,TypeName,Number)),
+  VarDecl(var,VarSpec(DefName,DefName,TypeName,Number,Number)))
 
 # Var declarations with no expressions
 
@@ -77,8 +77,8 @@ var one, two uint64
 ==>
 
 SourceFile(
-  VarDecl(var,VarSpec(VariableName,TypeName)),
-  VarDecl(var,VarSpec(VariableName,VariableName,TypeName)))
+  VarDecl(var,VarSpec(DefName,TypeName)),
+  VarDecl(var,VarSpec(DefName,DefName,TypeName)))
 
 # Grouped var declarations
 
@@ -89,7 +89,7 @@ var (
 
 ==>
 
-SourceFile(VarDecl(var,VarSpec(VariableName,Number),VarSpec(VariableName,Number)))
+SourceFile(VarDecl(var,VarSpec(DefName,Number),VarSpec(DefName,Number)))
 
 # Function declarations
 
@@ -106,33 +106,33 @@ func f2(a File, b, c, d Thing) int {}
 ==>
 
 SourceFile(
-  FunctionDecl(func,VariableName,Parameters,Block),
-  FunctionDecl(func,VariableName,Parameters(
-    Parameter(VariableName,TypeName),
-    Parameter(VariableName,VariableName,VariableName,TypeName)
+  FunctionDecl(func,DefName,Parameters,Block),
+  FunctionDecl(func,DefName,Parameters(
+    Parameter(DefName,TypeName),
+    Parameter(DefName,DefName,DefName,TypeName)
   ),TypeName,Block),
-  FunctionDecl(func,VariableName,Parameters,Parameters(Parameter(TypeName),Parameter(TypeName)),Block),
-  FunctionDecl(func,VariableName,Parameters,Parameters(
-    Parameter(VariableName,TypeName),
-    Parameter(VariableName,TypeName)
+  FunctionDecl(func,DefName,Parameters,Parameters(Parameter(TypeName),Parameter(TypeName)),Block),
+  FunctionDecl(func,DefName,Parameters,Parameters(
+    Parameter(DefName,TypeName),
+    Parameter(DefName,TypeName)
   ),Block),
-  FunctionDecl(func,VariableName,Parameters(Parameter(VariableName,TypeName),Parameter(VariableName,TypeName))),
-  FunctionDecl(func,VariableName,TypeParams(
+  FunctionDecl(func,DefName,Parameters(Parameter(DefName,TypeName),Parameter(DefName,TypeName))),
+  FunctionDecl(func,DefName,TypeParams(
     TypeParam(TypeName,TypeName,TypeName),
     TypeParam(TypeName,InterfaceType(interface,InterfaceBody)),
     TypeParam(TypeName,ParameterizedType(TypeName,TypeArgs(ParameterizedType(TypeName,TypeArgs(TypeName)))))
-  ),Parameters(Parameter(VariableName,ParameterizedType(TypeName,TypeArgs(TypeName)))),Block),
-  FunctionDecl(func,VariableName,Parameters(
-    Parameter(VariableName,ParameterizedType(QualifiedType(VariableName,TypeName),TypeArgs(TypeName)))
+  ),Parameters(Parameter(DefName,ParameterizedType(TypeName,TypeArgs(TypeName)))),Block),
+  FunctionDecl(func,DefName,Parameters(
+    Parameter(DefName,ParameterizedType(QualifiedType(VariableName,TypeName),TypeArgs(TypeName)))
   ),Block),
-  FunctionDecl(func,VariableName,TypeParams(
-    TypeParam(TypeName,TypeElem(TypeName,TypeName)),
+  FunctionDecl(func,DefName,TypeParams(
+    TypeParam(TypeName,TypeElem(TypeName,LogicOp,TypeName)),
     TypeParam(TypeName,UnderlyingType(TypeName)),
-    TypeParam(TypeName,TypeElem(UnderlyingType(TypeName),UnderlyingType(TypeName)))
+    TypeParam(TypeName,TypeElem(UnderlyingType(TypeName),LogicOp,UnderlyingType(TypeName)))
   ),Parameters),
-  FunctionDecl(func,VariableName,Parameters(
-    Parameter(VariableName,TypeName),
-    Parameter(VariableName,VariableName,VariableName,TypeName)
+  FunctionDecl(func,DefName,Parameters(
+    Parameter(DefName,TypeName),
+    Parameter(DefName,DefName,DefName,TypeName)
   ),TypeName,Block))
 
 # Single-line function declarations
@@ -144,12 +144,12 @@ func f3() { a(); b(); }
 ==>
 
 SourceFile(
-  FunctionDecl(func,VariableName,Parameters,Block(
+  FunctionDecl(func,DefName,Parameters,Block(
     ExprStatement(CallExpr(VariableName,Arguments)))),
-  FunctionDecl(func,VariableName,Parameters,Block(
+  FunctionDecl(func,DefName,Parameters,Block(
     ExprStatement(CallExpr(VariableName,Arguments)),
     ExprStatement(CallExpr(VariableName,Arguments)))),
-  FunctionDecl(func,VariableName,Parameters,Block(
+  FunctionDecl(func,DefName,Parameters,Block(
     ExprStatement(CallExpr(VariableName,Arguments)),
     ExprStatement(CallExpr(VariableName,Arguments)))))
 
@@ -162,14 +162,14 @@ func f3(...bool) {}
 ==>
 
 SourceFile(
-  FunctionDecl(func,VariableName,Parameters(
-    Parameter(VariableName,"...",PointerType(TypeName))
+  FunctionDecl(func,DefName,Parameters(
+    Parameter(DefName,"...",PointerType(TypeName))
   ),Block),
-  FunctionDecl(func,VariableName,Parameters(
-    Parameter(VariableName,TypeName),
-    Parameter(VariableName,"...",TypeName)
+  FunctionDecl(func,DefName,Parameters(
+    Parameter(DefName,TypeName),
+    Parameter(DefName,"...",TypeName)
   ),Block),
-  FunctionDecl(func,VariableName,Parameters(Parameter("...",TypeName)),Block))
+  FunctionDecl(func,DefName,Parameters(Parameter("...",TypeName)),Block))
 
 # Method declarations
 
@@ -180,11 +180,11 @@ func (p *T1) M1()
 ==>
 
 SourceFile(
-  MethodDecl(func,Parameters(Parameter(VariableName,TypeName)),FieldName,
-    Parameters(Parameter(VariableName,TypeName)),TypeName,Block),
-  MethodDecl(func,Parameters(Parameter(VariableName,PointerType(TypeName))),FieldName,
-    Parameters(Parameter(VariableName,"...",ParenthesizedType(TypeName))),TypeName,Block),
-  MethodDecl(func,Parameters(Parameter(VariableName,PointerType(TypeName))),FieldName,Parameters))
+  MethodDecl(func,Parameters(Parameter(DefName,TypeName)),FieldName,
+    Parameters(Parameter(DefName,TypeName)),TypeName,Block),
+  MethodDecl(func,Parameters(Parameter(DefName,PointerType(TypeName))),FieldName,
+    Parameters(Parameter(DefName,"...",ParenthesizedType(TypeName))),TypeName,Block),
+  MethodDecl(func,Parameters(Parameter(DefName,PointerType(TypeName))),FieldName,Parameters))
 
 # Type declarations
 

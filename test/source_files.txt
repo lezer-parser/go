@@ -4,7 +4,7 @@ package main
 
 ==>
 
-SourceFile(PackageClause(package,VariableName))
+SourceFile(PackageClause(package,DefName))
 
 # Single import declarations
 
@@ -18,8 +18,8 @@ import alias "some/package"
 SourceFile(
   ImportDecl(import,ImportSpec(String)),
   ImportDecl(import,ImportSpec(".",String)),
-  ImportDecl(import,ImportSpec(VariableName,String)),
-  ImportDecl(import,ImportSpec(VariableName,String)))
+  ImportDecl(import,ImportSpec(DefName,String)),
+  ImportDecl(import,ImportSpec(DefName,String)))
 
 # Grouped import declarations
 
@@ -40,8 +40,8 @@ SourceFile(
   ImportDecl(import,
     ImportSpec(String),
     ImportSpec(".",String),
-    ImportSpec(VariableName,String),
-    ImportSpec(VariableName,String)))
+    ImportSpec(DefName,String),
+    ImportSpec(DefName,String)))
 
 # Block comments
 /*
@@ -72,13 +72,13 @@ const d
 
 SourceFile(
   BlockComment,
-  ConstDecl(const,ConstSpec(VariableName)),
+  ConstDecl(const,ConstSpec(DefName)),
   BlockComment,
-  ConstDecl(const,ConstSpec(VariableName)),
+  ConstDecl(const,ConstSpec(DefName)),
   BlockComment,
-  ConstDecl(const,ConstSpec(VariableName)),
+  ConstDecl(const,ConstSpec(DefName)),
   BlockComment,
-  ConstDecl(const,ConstSpec(VariableName)))
+  ConstDecl(const,ConstSpec(DefName)))
 
 # Non-ascii variable names
 
@@ -95,10 +95,10 @@ const (
 ==>
 
 SourceFile(ConstDecl(const,
-  ConstSpec(VariableName),
-  ConstSpec(VariableName),
-  ConstSpec(VariableName),LineComment,
-  ConstSpec(VariableName),
-  ConstSpec(VariableName),
-  ConstSpec(VariableName),
-  ConstSpec(VariableName)))
+  ConstSpec(DefName),
+  ConstSpec(DefName),
+  ConstSpec(DefName),LineComment,
+  ConstSpec(DefName),
+  ConstSpec(DefName),
+  ConstSpec(DefName),
+  ConstSpec(DefName)))

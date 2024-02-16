@@ -10,10 +10,10 @@ func main() {
 ==>
 
 SourceFile(
-  PackageClause(package,VariableName),
-  FunctionDecl(func,VariableName,Parameters,Block(
-    VarDecl(var,VarSpec(VariableName,VariableName)),
-    ConstDecl(const,ConstSpec(VariableName,Number)))))
+  PackageClause(package,DefName),
+  FunctionDecl(func,DefName,Parameters,Block(
+    VarDecl(var,VarSpec(DefName,VariableName)),
+    ConstDecl(const,ConstSpec(DefName,Number)))))
 
 # Expression statements
 
@@ -23,7 +23,7 @@ func main() {
 
 ==>
 
-SourceFile(FunctionDecl(func,VariableName,Parameters,Block(
+SourceFile(FunctionDecl(func,DefName,Parameters,Block(
   ExprStatement(CallExpr(VariableName,Arguments(Number))))))
 
 # Send statements
@@ -34,7 +34,7 @@ func main() {
 
 ==>
 
-SourceFile(FunctionDecl(func,VariableName,Parameters,Block(
+SourceFile(FunctionDecl(func,DefName,Parameters,Block(
   SendStatement(VariableName,Number))))
 
 # Increment/Decrement statements
@@ -46,7 +46,7 @@ func main() {
 
 ==>
 
-SourceFile(FunctionDecl(func,VariableName,Parameters,Block(
+SourceFile(FunctionDecl(func,DefName,Parameters,Block(
   IncDecStatement(VariableName,IncDecOp),
   IncDecStatement(VariableName,IncDecOp))))
 
@@ -70,7 +70,7 @@ func main() {
 
 ==>
 
-SourceFile(FunctionDecl(func,VariableName,Parameters,Block(
+SourceFile(FunctionDecl(func,DefName,Parameters,Block(
   Assignment(VariableName,Number),
   Assignment(VariableName,VariableName,UpdateOp,Number,Number),
   Assignment(VariableName,UpdateOp,Number),
@@ -93,8 +93,8 @@ func main() {
 
 ==>
 
-SourceFile(FunctionDecl(func,VariableName,Parameters,Block(
-  VarDecl(VariableName,VariableName,Number,Number))))
+SourceFile(FunctionDecl(func,DefName,Parameters,Block(
+  VarDecl(DefName,DefName,Number,Number))))
 
 # If statements
 
@@ -124,10 +124,10 @@ func main() {
 
 ==>
 
-SourceFile(FunctionDecl(func,VariableName,Parameters,Block(
+SourceFile(FunctionDecl(func,DefName,Parameters,Block(
   IfStatement(if,VariableName,Block(
     ExprStatement(CallExpr(VariableName,Arguments)))),
-  IfStatement(if,VarDecl(VariableName,CallExpr(VariableName,Arguments)),VariableName,Block(
+  IfStatement(if,VarDecl(DefName,CallExpr(VariableName,Arguments)),VariableName,Block(
     ExprStatement(CallExpr(VariableName,Arguments)))),
   IfStatement(if,VariableName,Block(
     ExprStatement(CallExpr(VariableName,Arguments))
@@ -172,10 +172,10 @@ loop2:
 
 ==>
 
-SourceFile(FunctionDecl(func,VariableName,Parameters,Block(
+SourceFile(FunctionDecl(func,DefName,Parameters,Block(
   ForStatement(for,Block(ExprStatement(CallExpr(VariableName,Arguments)),GotoStatement(goto,LabelName))),
   LabeledStatement(LabelName,ForStatement(for,ForClause(
-    VarDecl(VariableName,Number),
+    VarDecl(DefName,Number),
     BinaryExp(VariableName,CompareOp,Number),
     IncDecStatement(VariableName,IncDecOp)
   ),Block(ExprStatement(CallExpr(VariableName,Arguments)),GotoStatement(break,LabelName)))),
@@ -184,7 +184,7 @@ SourceFile(FunctionDecl(func,VariableName,Parameters,Block(
     IncDecStatement(VariableName,IncDecOp)
   ),Block(ExprStatement(CallExpr(VariableName,Arguments)),GotoStatement(continue,LabelName)))),
   ForStatement(for,ForClause,Block(ExprStatement(CallExpr(VariableName,Arguments)),GotoStatement(continue))),
-  ForStatement(for,RangeClause(VariableName,range,VariableName),Block(
+  ForStatement(for,RangeClause(DefName,range,VariableName),Block(
     ExprStatement(CallExpr(VariableName,Arguments(VariableName))),GotoStatement(break))))))
 
 # Switch statements
@@ -212,7 +212,7 @@ func main() {
 
 ==>
 
-SourceFile(FunctionDecl(func,VariableName,Parameters,Block(
+SourceFile(FunctionDecl(func,DefName,Parameters,Block(
   SwitchStatement(switch,VariableName,SwitchBlock(
     Case(case,Number,Number),
     ExprStatement(CallExpr(VariableName,Arguments)),
@@ -223,7 +223,7 @@ SourceFile(FunctionDecl(func,VariableName,Parameters,Block(
     ExprStatement(CallExpr(VariableName,Arguments)),
     GotoStatement(break))),
   SwitchStatement(switch,SwitchBlock(Case(case,Bool),ReturnStatement(return))),
-  SwitchStatement(switch,VarDecl(VariableName,CallExpr(VariableName,Arguments)),VariableName,SwitchBlock))))
+  SwitchStatement(switch,VarDecl(DefName,CallExpr(VariableName,Arguments)),VariableName,SwitchBlock))))
 
 # Type switch statements
 
@@ -252,13 +252,13 @@ func main() {
 
 ==>
 
-SourceFile(FunctionDecl(func,VariableName,Parameters,Block(
+SourceFile(FunctionDecl(func,DefName,Parameters,Block(
   TypeSwitchStatement(switch,VariableName,type,SwitchBlock(
     Case(case,SliceType(TypeName)),
     ExprStatement(CallExpr(VariableName,Arguments)),
     Case(case,PointerType(TypeName)),
     GotoStatement(break))),
-  TypeSwitchStatement(switch,VariableName,VariableName,type,SwitchBlock(
+  TypeSwitchStatement(switch,DefName,VariableName,type,SwitchBlock(
     Case(case,TypeName),
     ExprStatement(CallExpr(VariableName,Arguments(String))),
     Case(case,TypeName),
@@ -289,9 +289,9 @@ func main() {
 
 ==>
 
-SourceFile(FunctionDecl(func,VariableName,Parameters,Block(
+SourceFile(FunctionDecl(func,DefName,Parameters,Block(
   SelectStatement(select,SelectBlock(
-    Case(case,ReceiveStatement(VariableName,UnaryExp("<-",VariableName))),
+    Case(case,ReceiveStatement(DefName,UnaryExp("<-",VariableName))),
     ExprStatement(CallExpr(VariableName,Arguments(VariableName))),
     Case(case,SendStatement(VariableName,"<-",VariableName)),
     ExprStatement(CallExpr(VariableName,Arguments(Number))),
@@ -309,7 +309,7 @@ func main() {
 
 ==>
 
-SourceFile(FunctionDecl(func,VariableName,Parameters,Block(
+SourceFile(FunctionDecl(func,DefName,Parameters,Block(
   DeferStatement(defer,CallExpr(SelectorExpr(VariableName,FieldName),Arguments)),
   GoStatement(go,CallExpr(SelectorExpr(VariableName,FieldName),Arguments)))))
 
@@ -326,7 +326,7 @@ func main() {
 
 ==>
 
-SourceFile(FunctionDecl(func,VariableName,Parameters,Block(
+SourceFile(FunctionDecl(func,DefName,Parameters,Block(
   Block(ExprStatement(CallExpr(VariableName,Arguments(String)))),
   Block(ExprStatement(CallExpr(VariableName,Arguments(String)))))))
 
@@ -340,7 +340,7 @@ func main() {
 
 ==>
 
-SourceFile(FunctionDecl(func,VariableName,Parameters,Block(
+SourceFile(FunctionDecl(func,DefName,Parameters,Block(
   Block(LabeledStatement(LabelName)))))
 
 # Empty statements
@@ -351,7 +351,7 @@ func main() {
 
 ==>
 
-SourceFile(FunctionDecl(func,VariableName,Parameters,Block))
+SourceFile(FunctionDecl(func,DefName,Parameters,Block))
 
 # Nested control statements
 
@@ -367,8 +367,8 @@ func main() {
 
 ==>
 
-SourceFile(FunctionDecl(func,VariableName,Parameters,Block(
-  ForStatement(for,RangeClause(VariableName,VariableName,range,VariableName),Block(
+SourceFile(FunctionDecl(func,DefName,Parameters,Block(
+  ForStatement(for,RangeClause(DefName,DefName,range,VariableName),Block(
     ExprStatement(CallExpr(
       FunctionLiteral(func,Parameters,Block(
         IfStatement(if,BinaryExp(VariableName,CompareOp,VariableName),Block(
@@ -385,4 +385,4 @@ x := T { a: b }
 
 SourceFile(
   ExprStatement(CallExpr(VariableName,Arguments(Number))),
-  VarDecl(VariableName,TypedLiteral(TypeName,LiteralValue(Element(Key(VariableName),VariableName)))))
+  VarDecl(DefName,TypedLiteral(TypeName,LiteralValue(Element(Key(VariableName),VariableName)))))
