@@ -10,7 +10,7 @@ func main() {
 ==>
 
 SourceFile(
-  PackageClause(package,PackageName),
+  PackageClause(package,VariableName),
   FunctionDecl(func,VariableName,Parameters,Block(
     VarDecl(var,VarSpec(VariableName,VariableName)),
     ConstDecl(const,ConstSpec(VariableName,Number)))))

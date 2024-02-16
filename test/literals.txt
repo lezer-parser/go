@@ -205,7 +205,7 @@ SourceFile(
   ConstDecl(const,ConstSpec(VariableName,TypedLiteral(
     StructType(struct,StructBody(FieldDecl(FieldName,TypeName))),
     LiteralValue(Element(Key(VariableName),Number))))),
-  ConstDecl(const,ConstSpec(VariableName,TypedLiteral(QualifiedType(PackageName,TypeName),LiteralValue))),
+  ConstDecl(const,ConstSpec(VariableName,TypedLiteral(QualifiedType(VariableName,TypeName),LiteralValue))),
   ConstDecl(const,ConstSpec(VariableName,TypedLiteral(
     ParameterizedType(TypeName,TypeArgs(TypeName,ParameterizedType(TypeName,TypeArgs(TypeName)))),
     LiteralValue))))

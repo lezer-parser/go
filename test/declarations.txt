@@ -123,7 +123,7 @@ SourceFile(
     TypeParam(TypeName,ParameterizedType(TypeName,TypeArgs(ParameterizedType(TypeName,TypeArgs(TypeName)))))
   ),Parameters(Parameter(VariableName,ParameterizedType(TypeName,TypeArgs(TypeName)))),Block),
   FunctionDecl(func,VariableName,Parameters(
-    Parameter(VariableName,ParameterizedType(QualifiedType(PackageName,TypeName),TypeArgs(TypeName)))
+    Parameter(VariableName,ParameterizedType(QualifiedType(VariableName,TypeName),TypeArgs(TypeName)))
   ),Block),
   FunctionDecl(func,VariableName,TypeParams(
     TypeParam(TypeName,TypeElem(TypeName,TypeName)),

@@ -1,3 +1,6 @@
+// FIXME "*" tokens
+// FIXME true/false/iota/nil
+
 @precedence {
   unary
   mult @left
@@ -29,15 +32,11 @@
 
 @skip { space | LineComment | BlockComment }
 
-PackageName { identifier ~identifier }
-
 TypeName[@dynamicPrecedence=-1] { identifier ~identifier }
 
-typeName { QualifiedType { (PackageName ".")+ TypeName } | TypeName }
+typeName { QualifiedType { (VariableName ~dot ".")+ TypeName } | TypeName }
 
 VariableName { identifier ~identifier }
-
-QualifiedName { (PackageName ".")+ VariableName }
 
 LabelName { identifier }
 
@@ -45,14 +44,14 @@ FieldName { identifier ~identifier }
 
 ParameterizedType { typeName TypeArgs }
 
-TypeArgs { "[" commaSep1<type> "]" }
+TypeArgs[@dynamicPrecedence=2] { "[" commaSep1<type> "]" }
 
 TypeParams[@dynamicPrecedence=-1] { "[" commaSep1<TypeParam> "]" }
 
 TypeParam { typeName ("," typeName)* typeElem }
 
 type[@isGroup=Type] {
-  PointerType { "*" !pointer type } |
+  PointerType { "*" ~star type } |
   FunctionType { kw<"func"> signature } |
   InterfaceType { kw<"interface"> InterfaceBody { "{" ((MethodElem | typeElem) semi)* "}" } } |
   ChannelType {
@@ -106,19 +105,34 @@ FunctionDecl { kw<"func"> VariableName TypeParams? signature Block? }
 
 MethodDecl { kw<"func"> Parameters FieldName signature Block? }
 
-ImportSpec { ("." | PackageName) String }
+ImportSpec { ("." | VariableName) String }
 ImportDecl { kw<"import"> (ImportSpec | "(" (ImportSpec semi)* ")") }
 
+// Kludges (borrowed from tree-sitter):
+//
+// - Only allow type args in call expressions, though the grammar
+//   allows them on any identifier expression. This avoids every
+//   variable index expression being ambiguous with a single type arg.
+//
+// - Omit method expressions entirely, since calls to them look
+//   exactly like type conversions.
+
 expr[@isGroup=Expr] {
-  operand |
+  Number |
+  String |
+  Rune |
+  VariableName |
+  TypedLiteral { literalType LiteralValue } |
+  ParenthesizedExpr { "(" expr ")" } |
+  FunctionLiteral { kw<"func"> signature Block } |
   Conversion[@dynamicPrecedence=-1] { type !convert ~paren "(" expr ","? ")" } |
-  MethodExpr { type !dot "." FieldName } |
-  SelectorExpr { expr !dot "." FieldName } |
+  SelectorExpr |
   IndexExpr { expr !index ~bracket "[" expr ","? "]" } |
   SliceExpr { expr !slice ~bracket "[" expr? ":" expr? (":" expr)? "]" } |
   TypeAssertion { expr !type "." "(" type ")" } |
-  CallExpr { expr !call Arguments } |
-  UnaryExp { (ArithOp<"+" | "-"> | LogicOp<"!"> | BitOp<"^"> | DerefOp<"*" | "&"> | "<-") !unary expr } |
+  CallExpr { (expr | ParameterizedExpr) !call Arguments } |
+  CallExpr { (@extend[@name=make]<identifier, "make"> | @extend[@name=new]<identifier, "new">) !call newArguments } |
+  UnaryExp { (ArithOp<"+" | "-"> | LogicOp<"!"> | BitOp<"^"> | DerefOp<"*" ~star | "&"> | "<-") !unary expr } |
   BinaryExp {
     expr !mult (ArithOp<"*" | "/" | "%"> | BitOp<"<<" | ">>" | "&" | "&^">) expr |
     expr !add (ArithOp<"+" | "-"> | BitOp<"|" | "^">) expr |
@@ -128,20 +142,16 @@ expr[@isGroup=Expr] {
   }
 }
 
+SelectorExpr { expr !dot ~dot "." FieldName }
+
+ParameterizedExpr { (VariableName | SelectorExpr) ~bracket TypeArgs }
+
 Arguments {
-  "(" ((exprList | type ("," exprList)?) ("..." ","?)?)? ")"
+  "(" (exprList ("..." ","?)?)? ")"
 }
 
-operand {
-  Number |
-  String |
-  Rune |
-  QualifiedName |
-  VariableName |
-  Parameterized { (VariableName | QualifiedName) ~bracket TypeArgs } |
-  TypedLiteral { literalType LiteralValue } |
-  ParenthesizedExpr { "(" expr ")" } |
-  FunctionLiteral { kw<"func"> signature Block }
+newArguments[@name=Arguments] {
+  "(" type ("," exprList)? ("..." ","?)? ")"
 }
 
 LiteralValue { "{" commaSep<Element { (Key { expr | LiteralValue } ":")? (expr | LiteralValue) }> "}" }
@@ -205,7 +215,7 @@ typeSwitchBlock[@name=SwitchBlock] {
 
 ReceiveStatement { (exprList "=" | idList ":=")? expr }
 
-PackageClause { kw<"package"> PackageName }
+PackageClause { kw<"package"> VariableName }
 
 simpleStatement {
   ExprStatement { expr } |
