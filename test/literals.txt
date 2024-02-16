@@ -16,7 +16,7 @@ const (
 
 ==>
 
-SourceFile(ConstDecl(const,
+SourceFile(ConstDecl(const,SpecList(
   ConstSpec(DefName,Number),
   ConstSpec(DefName,Number),
   ConstSpec(DefName,Number),
@@ -27,7 +27,7 @@ SourceFile(ConstDecl(const,
   ConstSpec(DefName,Number),
   ConstSpec(DefName,Number),
   ConstSpec(DefName,Number),
-  ConstSpec(DefName,Number)))
+  ConstSpec(DefName,Number))))
 
 # Float literals
 
@@ -52,7 +52,7 @@ const (
 
 ==>
 
-SourceFile(ConstDecl(const,
+SourceFile(ConstDecl(const,SpecList(
   ConstSpec(DefName,Number),
   ConstSpec(DefName,Number),
   ConstSpec(DefName,Number),
@@ -68,7 +68,7 @@ SourceFile(ConstDecl(const,
   ConstSpec(DefName,Number),
   ConstSpec(DefName,Number),
   ConstSpec(DefName,Number),
-  ConstSpec(DefName,Number)))
+  ConstSpec(DefName,Number))))
 
 # Rune literals
 
@@ -83,13 +83,13 @@ const (
 
 ==>
 
-SourceFile(ConstDecl(const,
+SourceFile(ConstDecl(const,SpecList(
   ConstSpec(DefName,Rune),
   ConstSpec(DefName,Rune),
   ConstSpec(DefName,Rune),
   ConstSpec(DefName,Rune),
   ConstSpec(DefName,Rune),
-  ConstSpec(DefName,Rune)))
+  ConstSpec(DefName,Rune))))
 
 # Imaginary literals
 
@@ -110,7 +110,7 @@ const (
 
 ==>
 
-SourceFile(ConstDecl(const,
+SourceFile(ConstDecl(const,SpecList(
   ConstSpec(DefName,Number),
   ConstSpec(DefName,Number),
   ConstSpec(DefName,Number),
@@ -122,7 +122,7 @@ SourceFile(ConstDecl(const,
   ConstSpec(DefName,Number),
   ConstSpec(DefName,Number),
   ConstSpec(DefName,Number),
-  ConstSpec(DefName,Number)))
+  ConstSpec(DefName,Number))))
 
 # String literals
 
@@ -136,12 +136,12 @@ const (
 
 ==>
 
-SourceFile(ConstDecl(const,
+SourceFile(ConstDecl(const,SpecList(
   ConstSpec(DefName,String),
   ConstSpec(DefName,String),
   ConstSpec(DefName,String),
   ConstSpec(DefName,String),
-  ⚠(String)))
+  ⚠(String))))
 
 # Slice literals
 

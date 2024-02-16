@@ -35,13 +35,13 @@ import (
 ==>
 
 SourceFile(
-  ImportDecl(import),
-  ImportDecl(import,ImportSpec(String)),
-  ImportDecl(import,
+  ImportDecl(import,SpecList),
+  ImportDecl(import,SpecList(ImportSpec(String))),
+  ImportDecl(import,SpecList(
     ImportSpec(String),
     ImportSpec(".",String),
     ImportSpec(DefName,String),
-    ImportSpec(DefName,String)))
+    ImportSpec(DefName,String))))
 
 # Block comments
 /*
@@ -94,11 +94,11 @@ const (
 
 ==>
 
-SourceFile(ConstDecl(const,
+SourceFile(ConstDecl(const,SpecList(
   ConstSpec(DefName),
   ConstSpec(DefName),
   ConstSpec(DefName),LineComment,
   ConstSpec(DefName),
   ConstSpec(DefName),
   ConstSpec(DefName),
-  ConstSpec(DefName)))
+  ConstSpec(DefName))))

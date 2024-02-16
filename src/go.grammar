@@ -90,14 +90,16 @@ typeElem {
 
 Block { "{" semiSep<statement> "}" }
 
+SpecList<spec> { "(" (spec semi)* ")" }
+
 ConstSpec { idList (type? "=" exprList)? }
-ConstDecl { kw<"const"> (ConstSpec | "(" (ConstSpec semi)* ")") }
+ConstDecl { kw<"const"> (ConstSpec | SpecList<ConstSpec>) }
 
 TypeSpec { DefName "=" type | DefName TypeParams? type }
-TypeDecl { kw<"type"> (TypeSpec | "(" (TypeSpec semi)* ")") }
+TypeDecl { kw<"type"> (TypeSpec | SpecList<TypeSpec>) }
 
 VarSpec { idList (type ("=" exprList)? | "=" exprList)? }
-VarDecl { kw<"var"> (VarSpec | "(" (VarSpec semi)* ")") }
+VarDecl { kw<"var"> (VarSpec | SpecList<VarSpec>) }
 shortVarDecl[@name=VarDecl] { idList ~shortvar ":=" exprList }
 
 FunctionDecl { kw<"func"> DefName TypeParams? signature Block? }
@@ -105,7 +107,7 @@ FunctionDecl { kw<"func"> DefName TypeParams? signature Block? }
 MethodDecl { kw<"func"> Parameters FieldName signature Block? }
 
 ImportSpec { ("." | DefName)? String }
-ImportDecl { kw<"import"> (ImportSpec | "(" (ImportSpec semi)* ")") }
+ImportDecl { kw<"import"> (ImportSpec | SpecList<ImportSpec>) }
 
 // Kludges around expr/type ambiguity (borrowed from tree-sitter):
 //

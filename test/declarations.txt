@@ -31,7 +31,7 @@ const (
 
 ==>
 
-SourceFile(ConstDecl(const,ConstSpec(DefName,Number),ConstSpec(DefName,Number)))
+SourceFile(ConstDecl(const,SpecList(ConstSpec(DefName,Number),ConstSpec(DefName,Number))))
 
 # Const declarations with implicit values
 
@@ -43,7 +43,7 @@ const (
 
 ==>
 
-SourceFile(ConstDecl(const,ConstSpec(DefName,VariableName),ConstSpec(DefName),ConstSpec(DefName)))
+SourceFile(ConstDecl(const,SpecList(ConstSpec(DefName,VariableName),ConstSpec(DefName),ConstSpec(DefName))))
 
 # Var declarations without types
 
@@ -89,7 +89,7 @@ var (
 
 ==>
 
-SourceFile(VarDecl(var,VarSpec(DefName,Number),VarSpec(DefName,Number)))
+SourceFile(VarDecl(var,SpecList(VarSpec(DefName,Number),VarSpec(DefName,Number))))
 
 # Function declarations
 
@@ -199,5 +199,5 @@ type a = d[e]
 
 SourceFile(
   TypeDecl(type,TypeSpec(DefName,TypeName)),
-  TypeDecl(type,TypeSpec(DefName,TypeName),TypeSpec(DefName,TypeName)),
+  TypeDecl(type,SpecList(TypeSpec(DefName,TypeName),TypeSpec(DefName,TypeName))),
   TypeDecl(type,TypeSpec(DefName,ParameterizedType(TypeName,TypeArgs(TypeName)))))
