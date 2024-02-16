@@ -105,7 +105,7 @@ FunctionDecl { kw<"func"> VariableName TypeParams? signature Block? }
 
 MethodDecl { kw<"func"> Parameters FieldName signature Block? }
 
-ImportSpec { ("." | VariableName) String }
+ImportSpec { ("." | VariableName)? String }
 ImportDecl { kw<"import"> (ImportSpec | "(" (ImportSpec semi)* ")") }
 
 // Kludges (borrowed from tree-sitter):
