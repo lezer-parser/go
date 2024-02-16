@@ -18,12 +18,13 @@
   channelOut
 
   else @right
+  label
 }
 
 @top SourceFile {
   (PackageClause semi)?
   (ImportDecl semi)*
-  semiSep<declaration | FunctionDecl | MethodDecl>
+  semiSep<statement | FunctionDecl | MethodDecl>
 }
 
 @skip { space | LineComment | BlockComment }
@@ -46,7 +47,7 @@ ParameterizedType { typeName TypeArgs }
 
 TypeArgs { "[" commaSep1<type> "]" }
 
-TypeParams[@dynamicPrecedence=-1] { "[" TypeParam "]" }
+TypeParams[@dynamicPrecedence=-1] { "[" commaSep1<TypeParam> "]" }
 
 TypeParam { typeName ("," typeName)* typeElem }
 
@@ -95,9 +96,9 @@ ConstSpec { idList (type? "=" exprList)? }
 ConstDecl { kw<"const"> (ConstSpec | "(" (ConstSpec semi)* ")") }
 
 TypeSpec { typeName "=" type | typeName TypeParams? type }
-TypeDecl { kw<"type"> (TypeSpec | ("(" TypeSpec semi)* ")") }
+TypeDecl { kw<"type"> (TypeSpec | "(" (TypeSpec semi)* ")") }
 
-VarSpec { idList (type ("=" exprList) | "=" exprList) }
+VarSpec { idList (type ("=" exprList)? | "=" exprList) }
 VarDecl { kw<"var"> (VarSpec | "(" (VarSpec semi)* ")") }
 shortVarDecl[@name=VarDecl] { idList ~shortvar ":=" exprList }
 
@@ -107,10 +108,6 @@ MethodDecl { kw<"func"> Parameters FieldName signature Block? }
 
 ImportSpec { ("." | PackageName) String }
 ImportDecl { kw<"import"> (ImportSpec | "(" (ImportSpec semi)* ")") }
-
-declaration {
-  ConstDecl | TypeDecl | VarDecl
-}
 
 expr[@isGroup=Expr] {
   operand |
@@ -154,18 +151,20 @@ idList { VariableName ~ids ("," VariableName ~ids)* }
 
 statement[@isGroup=Statement] {
   simpleStatement |
-  declaration |
+  ConstDecl |
+  TypeDecl |
+  VarDecl |
   Block |
-  LabeledStatement { LabelName ":" statement } |
+  LabeledStatement { LabelName ":" (!label statement)? } |
   IfStatement |
   SwitchStatement {
-    kw<"switch"> (simpleStatement semi)? expr SwitchBlock
+    kw<"switch"> (simpleStatement semi)? expr? SwitchBlock
   } |
   TypeSwitchStatement {
     kw<"switch"> (simpleStatement semi)? (VariableName ~shortvar ":=")? expr "." "(" kw<"type"> ")" typeSwitchBlock
   } |
   ForStatement {
-    kw<"for"> (expr | ForClause | RangeClause) Block
+    kw<"for"> (expr | ForClause | RangeClause)? Block
   } |
   GoStatement {
     kw<"go"> expr
@@ -188,7 +187,7 @@ statement[@isGroup=Statement] {
   }  
 }
 
-IfStatement { kw<"if"> (simpleStatement semi)? expr Block (!else kw<"else"> (IfStatement | Block)) }
+IfStatement { kw<"if"> (simpleStatement semi)? expr Block (!else kw<"else"> (IfStatement | Block))? }
 
 Case<expr> { (kw<"case"> expr | kw<"default">) ":" }
 
@@ -196,7 +195,7 @@ SwitchBlock {
   "{" (Case<exprList> semiSep<statement>)* "}"
 }
 
-ForClause { simpleStatement semi expr semi simpleStatement }
+ForClause { simpleStatement? ";" expr? ";" simpleStatement? }
 
 RangeClause { (exprList "=" | idList ":=") kw<"range"> expr }
 
@@ -204,7 +203,7 @@ typeSwitchBlock[@name=SwitchBlock] {
   "{" (Case<commaSep1<type>> semiSep<statement>)* "}"
 }
 
-ReceiveStatement { (exprList "=" | idList ":=") expr }
+ReceiveStatement { (exprList "=" | idList ":=")? expr }
 
 PackageClause { kw<"package"> PackageName }
 
