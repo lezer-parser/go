@@ -93,7 +93,7 @@ Block { "{" semiSep<statement> "}" }
 ConstSpec { idList (type? "=" exprList)? }
 ConstDecl { kw<"const"> (ConstSpec | "(" (ConstSpec semi)* ")") }
 
-TypeSpec { typeName "=" type | typeName TypeParams? type }
+TypeSpec { DefName "=" type | DefName TypeParams? type }
 TypeDecl { kw<"type"> (TypeSpec | "(" (TypeSpec semi)* ")") }
 
 VarSpec { idList (type ("=" exprList)? | "=" exprList)? }

@@ -16,6 +16,7 @@ export const goHighlighting = styleTags({
   LabelName: t.labelName,
   FieldName: t.propertyName,
   "FunctionDecl/DefName": t.function(t.definition(t.variableName)),
+  "TypeSpec/DefName": t.definition(t.typeName),
   "CallExpr/VariableName": t.function(t.variableName),
   LineComment: t.lineComment,
   BlockComment: t.blockComment,

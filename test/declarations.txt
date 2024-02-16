@@ -198,6 +198,6 @@ type a = d[e]
 ==>
 
 SourceFile(
-  TypeDecl(type,TypeSpec(TypeName,TypeName)),
-  TypeDecl(type,TypeSpec(TypeName,TypeName),TypeSpec(TypeName,TypeName)),
-  TypeDecl(type,TypeSpec(TypeName,ParameterizedType(TypeName,TypeArgs(TypeName)))))
+  TypeDecl(type,TypeSpec(DefName,TypeName)),
+  TypeDecl(type,TypeSpec(DefName,TypeName),TypeSpec(DefName,TypeName)),
+  TypeDecl(type,TypeSpec(DefName,ParameterizedType(TypeName,TypeArgs(TypeName)))))
