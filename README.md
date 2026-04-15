@@ -1,3 +1,5 @@
+**This repository has moved to https://code.haverbeke.berlin/lezer/go**
+
 # @lezer/go
 
 This is a Go grammar for the
